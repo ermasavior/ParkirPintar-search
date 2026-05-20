@@ -60,7 +60,7 @@ jobs:
     needs: [golangci-lint, test]
     if: github.event_name != 'workflow_dispatch'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Download coverage artifact
@@ -69,7 +69,7 @@ jobs:
         name: coverage-out
         path: ./coverage
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@v3.0.0
+      uses: SonarSource/sonarqube-scan-action@8.1.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
