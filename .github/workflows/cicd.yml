@@ -90,13 +90,13 @@ jobs:
         run: make build
       - name: Build docker image
         env:
-          SERVICE_NAME: ${{ github.event.repository.name }}
+          SERVICE_NAME: parkirpintar-search
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f Dockerfile -t ermasavior/${SERVICE_NAME}:${IMAGE_TAG} .
       - name: Push docker image
         env:
-          SERVICE_NAME: ${{ github.event.repository.name }}
+          SERVICE_NAME: parkirpintar-search
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker push ermasavior/${SERVICE_NAME}:${IMAGE_TAG}
