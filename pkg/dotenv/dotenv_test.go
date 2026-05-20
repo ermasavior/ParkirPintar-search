@@ -81,7 +81,7 @@ func TestLoadEnv(t *testing.T) {
 				return "custom.env"
 			},
 			teardown: func(file string) {
-				os.Remove(file)
+				_ = os.Remove(file)
 			},
 		},
 		{
@@ -116,7 +116,9 @@ func TestLoadEnv_InvalidFile(t *testing.T) {
 func TestLoadEnv_DefaultLocation(t *testing.T) {
 	content := "DEFAULT_VAR=default_value\n"
 	_ = os.WriteFile(".env", []byte(content), 0644)
-	defer os.Remove(".env")
+	defer func() {
+		_ = os.Remove(".env")
+	}()
 
 	LoadEnv()
 	// Should load from default .env location
@@ -125,7 +127,9 @@ func TestLoadEnv_DefaultLocation(t *testing.T) {
 func TestLoadEnv_WithMultipleArgs(t *testing.T) {
 	content := "MULTI_VAR=multi_value\n"
 	_ = os.WriteFile("test.env", []byte(content), 0644)
-	defer os.Remove("test.env")
+	defer func() {
+		_ = os.Remove("test.env")
+	}()
 
 	LoadEnv("test.env", "extra_arg")
 	// Should use first arg as location
@@ -135,13 +139,13 @@ func TestLoadEnv_InvalidContent(t *testing.T) {
 	// Create directory instead of file to trigger error
 	_ = os.Mkdir(".env_dir", 0755)
 	defer func() {
-		os.RemoveAll(".env_dir")
+		_ = os.RemoveAll(".env_dir")
 	}()
 
 	// Create invalid .env file
 	_ = os.WriteFile(".env", []byte("INVALID LINE WITHOUT EQUALS"), 0644)
 	defer func() {
-		os.Remove(".env")
+		_ = os.Remove(".env")
 	}()
 
 	LoadEnv()
