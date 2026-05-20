@@ -44,7 +44,7 @@ func TestGetEnv(t *testing.T) {
 				_ = os.Setenv(tt.key, tt.envValue)
 				defer func() {
 					_ = os.Unsetenv(tt.key)
-				}
+				}()
 			}
 
 			result := GetEnv(tt.key, tt.defaultValue)
@@ -136,13 +136,13 @@ func TestLoadEnv_InvalidContent(t *testing.T) {
 	_ = os.Mkdir(".env_dir", 0755)
 	defer func() {
 		os.RemoveAll(".env_dir")
-	}
+	}()
 
 	// Create invalid .env file
 	_ = os.WriteFile(".env", []byte("INVALID LINE WITHOUT EQUALS"), 0644)
 	defer func() {
 		os.Remove(".env")
-	}
+	}()
 
 	LoadEnv()
 	// Should handle invalid content gracefully
