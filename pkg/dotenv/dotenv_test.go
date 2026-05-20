@@ -41,8 +41,10 @@ func TestGetEnv(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.envValue != "" {
-				os.Setenv(tt.key, tt.envValue)
-				defer os.Unsetenv(tt.key)
+				_ = os.Setenv(tt.key, tt.envValue)
+				defer func() {
+					_ = os.Unsetenv(tt.key)
+				}
 			}
 
 			result := GetEnv(tt.key, tt.defaultValue)
@@ -67,7 +69,7 @@ func TestLoadEnv(t *testing.T) {
 				return ".env"
 			},
 			teardown: func(file string) {
-				os.Remove(file)
+				_ = os.Remove(file)
 			},
 		},
 		{
@@ -132,11 +134,15 @@ func TestLoadEnv_WithMultipleArgs(t *testing.T) {
 func TestLoadEnv_InvalidContent(t *testing.T) {
 	// Create directory instead of file to trigger error
 	_ = os.Mkdir(".env_dir", 0755)
-	defer os.RemoveAll(".env_dir")
+	defer func() {
+		os.RemoveAll(".env_dir")
+	}
 
 	// Create invalid .env file
 	_ = os.WriteFile(".env", []byte("INVALID LINE WITHOUT EQUALS"), 0644)
-	defer os.Remove(".env")
+	defer func() {
+		os.Remove(".env")
+	}
 
 	LoadEnv()
 	// Should handle invalid content gracefully
