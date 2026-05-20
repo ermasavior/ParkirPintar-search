@@ -3,11 +3,7 @@ package handler
 import (
 	pb "parkir-pintar/services/search/gen/search/v1"
 	"parkir-pintar/services/search/internal/search/usecase"
-
-	"github.com/go-playground/validator/v10"
 )
-
-var validate = validator.New()
 
 // SearchServer implements the gRPC SearchServiceServer interface
 type SearchServer struct {
