@@ -14,4 +14,9 @@ COPY --from=alpine /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine /etc/passwd /etc/passwd
 COPY --from=golang /app/bin/search /app/search
+
+RUN adduser -S appuser
+RUN chown -R appuser /app
+USER appuser
+
 ENTRYPOINT ["./search"]
