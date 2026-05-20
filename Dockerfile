@@ -15,8 +15,7 @@ COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine /etc/passwd /etc/passwd
 COPY --from=golang /app/bin/search /app/search
 
-RUN adduser -S appuser
-RUN chown -R appuser /app
+RUN adduser -S appuser && chown -R appuser /app
 USER appuser
 
 ENTRYPOINT ["./search"]
