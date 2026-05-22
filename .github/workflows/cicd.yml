@@ -100,24 +100,3 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker push ermasavior/${SERVICE_NAME}:${IMAGE_TAG}
-  deploy:
-    name: Deploy to EC2
-    needs: build-image
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2 
-      - name: Build & Deploy
-        env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{ secrets.SSH_HOSTNAME }}
-          USERNAME: ${{ secrets.SSH_USERNAME }}
-          IMAGE_TAG: ${{ github.sha }}
-      
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} "
-            export IMAGE_TAG=${IMAGE_TAG} &&
-            cd ~/apps &&
-            docker compose pull search-service &&
-            docker compose up -d --no-deps search-service
-          "

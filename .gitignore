@@ -33,3 +33,4 @@ Thumbs.db
 .sop/
 .env
 .env.docker
+.env.e2e
